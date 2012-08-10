@@ -5,7 +5,7 @@ Typo is a simple serialization layer for Accumulo that makes it easy to read
 and write java objects directly to Accumulo fields.  Typo serializes Java types
 in such a way that the lexicographic sort order corresponds to the object sort
 order.  Typo is not an ORM layer, its purpose is to make it easy to read and
-write Java objects to the Accumulo key fields and value.
+write Java objects to the Accumulo key fields and value that sort correctly.
 
 This project is an experiment and its API may change drastically.
 
