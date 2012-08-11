@@ -24,7 +24,8 @@ import java.io.IOException;
 import org.apache.accumulo.client.typo.encoders.util.FixedByteArrayOutputStream;
 
 /**
- * 
+ * Unsigned long encoder. The lexicographic encoding sorts first 0l and -1l last. This encoding does not correspond to the sort of Long because it does not
+ * consider the sign bit. If Java had an unsigned long type, this encoder would correspond to its sort order.
  */
 public class ULongEncoder extends LexEncoder<Long> {
   

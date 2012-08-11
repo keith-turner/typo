@@ -17,8 +17,10 @@ package org.apache.accumulo.client.typo.encoders;
  */
 
 /**
- * 
+ * Signed long encoder. The lexicographic encoding sorts Long.MIN_VALUE first and Long.MAX_VALUE last. The lexicographic encoding sorts -2l before -1l. It
+ * corresponds to the sort order of Long.
  */
+
 public class LongEncoder extends ULongEncoder {
   @Override
   public byte[] toBytes(Long l) {
