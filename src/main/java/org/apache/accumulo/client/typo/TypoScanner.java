@@ -1,12 +1,9 @@
 package org.apache.accumulo.client.typo;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.accumulo.core.client.ScannerBase;
-import org.apache.accumulo.core.data.Key;
-import org.apache.accumulo.core.data.Value;
 import org.apache.hadoop.io.Text;
 
 /**
@@ -52,70 +49,10 @@ public class TypoScanner<RT,CFT,CQT,VT> implements Iterable<Entry<TypoKey<RT,CFT
     return scanner;
   }
 
-  private class TypoEntry implements Map.Entry<TypoKey<RT,CFT,CQT>,VT> {
-    
-    private Entry<Key,Value> srcEntry;
-    private TypoKey<RT,CFT,CQT> tk;
-    private VT val;
-    
-    public TypoEntry(Entry<Key,Value> srcEntry, TypoKey<RT,CFT,CQT> tk, VT val) {
-      this.srcEntry = srcEntry;
-      this.tk = tk;
-      this.val = val;
-    }
-    
-    @Override
-    public TypoKey<RT,CFT,CQT> getKey() {
-      return tk;
-    }
-    
-    @Override
-    public VT getValue() {
-      return val;
-    }
-    
-    @Override
-    public VT setValue(VT value) {
-      return ae.valEnc.fromBytes(srcEntry.setValue(new Value(ae.valEnc.toBytes(value))).get());
-    }
-    
-    public String toString() {
-      return tk + " " + val;
-    }
-  }
   
-  private class TypoIterator implements Iterator<Entry<TypoKey<RT,CFT,CQT>,VT>> {
-    
-    private Iterator<Entry<Key,Value>> iter;
-    
-    public TypoIterator(Iterator<Entry<Key,Value>> iterator) {
-      this.iter = iterator;
-    }
-
-    @Override
-    public boolean hasNext() {
-      return iter.hasNext();
-    }
-    
-    @Override
-    public Entry<TypoKey<RT,CFT,CQT>,VT> next() {
-      Entry<Key,Value> srcEntry = iter.next();
-      TypoKey<RT,CFT,CQT> tk = new TypoKey<RT,CFT,CQT>(srcEntry.getKey(), ae.rowLexEnc, ae.colfLexEnc, ae.colqLexEnc);
-      VT val = ae.valEnc.fromBytes(srcEntry.getValue().get());
-      
-      return new TypoEntry(srcEntry, tk, val);
-    }
-    
-    @Override
-    public void remove() {
-      iter.remove();
-    }
-    
-  }
-
   @Override
   public Iterator<Entry<TypoKey<RT,CFT,CQT>,VT>> iterator() {
-    return new TypoIterator(scanner.iterator());
+    return new TypoIterator<RT,CFT,CQT,VT>(scanner.iterator(), ae);
   }
   
 

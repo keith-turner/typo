@@ -16,10 +16,16 @@
  */
 package org.apache.accumulo.client.typo;
 
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import org.apache.accumulo.client.typo.encoders.Encoder;
 import org.apache.accumulo.client.typo.encoders.Lexicoder;
+import org.apache.accumulo.core.client.RowIterator;
 import org.apache.accumulo.core.client.ScannerBase;
+import org.apache.accumulo.core.data.Key;
 import org.apache.accumulo.core.data.Range;
+import org.apache.accumulo.core.data.Value;
 import org.apache.hadoop.io.Text;
 
 /**
@@ -45,6 +51,16 @@ public class Typo<RT,CFT,CQT,VT> {
   
   public TypoMutation<RT,CFT,CQT,VT> newMutation(RT row) {
     return new TypoMutation<RT,CFT,CQT,VT>(row, ae);
+  }
+
+  /**
+   * This method can be used in conjunction with the {@link RowIterator}
+   * 
+   * @param iter
+   * @return
+   */
+  public TypoIterator<RT,CFT,CQT,VT> newIterator(Iterator<Entry<Key,Value>> iter) {
+    return new TypoIterator<RT,CFT,CQT,VT>(iter, ae);
   }
 
   public Range newRange(RT row) {
