@@ -19,9 +19,9 @@ package org.apache.accumulo.client.typo.tuples;
 /**
  * 
  */
-public class Pair<A,B> {
-  protected A first;
-  protected B second;
+public class Pair<A,B> implements Comparable<Pair<A,B>> {
+  private A first;
+  private B second;
   
   public Pair(A first, B second) {
     this.first = first;
@@ -39,4 +39,30 @@ public class Pair<A,B> {
   public String toString() {
     return "(" + first + "," + second + ")";
   }
+  
+  @Override
+  public int compareTo(Pair<A,B> o) {
+    int cmp = ((Comparable<A>) first).compareTo(o.first);
+    if (cmp == 0) {
+      cmp = ((Comparable<B>) second).compareTo(o.second);
+    }
+    
+    return cmp;
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    if (o instanceof Pair) {
+      Pair<A,B> p = (Pair<A,B>) o;
+      return first.equals(p.first) && second.equals(p.second);
+    }
+    
+    return false;
+  }
+  
+  @Override
+  public int hashCode() {
+    return first.hashCode() + second.hashCode();
+  }
+
 }

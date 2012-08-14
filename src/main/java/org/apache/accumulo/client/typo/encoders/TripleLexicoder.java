@@ -26,9 +26,10 @@ public class TripleLexicoder<A,B,C> implements Lexicoder<Triple<A,B,C>> {
   private Lexicoder<B> secondLexicoder;
   private Lexicoder<C> thirdLexicoder;
   
-  public TripleLexicoder(Lexicoder<A> firstLexicoder, Lexicoder<B> secondLexicoder) {
+  public TripleLexicoder(Lexicoder<A> firstLexicoder, Lexicoder<B> secondLexicoder, Lexicoder<C> thirdLexicoder) {
     this.firstLexicoder = firstLexicoder;
     this.secondLexicoder = secondLexicoder;
+    this.thirdLexicoder = thirdLexicoder;
   }
 
   @Override
@@ -41,7 +42,7 @@ public class TripleLexicoder<A,B,C> implements Lexicoder<Triple<A,B,C>> {
   public Triple<A,B,C> fromBytes(byte[] data) {
     byte[][] fields = PairLexicoder.split(data);
     
-    if (fields.length != 2) {
+    if (fields.length != 3) {
       throw new RuntimeException("Data does not have 3 fields, it has " + fields.length);
     }
     

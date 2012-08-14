@@ -19,19 +19,58 @@ package org.apache.accumulo.client.typo.tuples;
 /**
  * 
  */
-public class Triple<A,B,C> extends Pair<A,B> {
+public class Triple<A,B,C> implements Comparable<Triple<A,B,C>> {
+  private A first;
+  private B second;
   private C third;
   
   public Triple(A first, B second, C third) {
-    super(first, second);
+    this.first = first;
+    this.second = second;
     this.third = third;
   }
   
+  public A getFirst() {
+    return first;
+  }
+  
+  public B getSecond() {
+    return second;
+  }
+
   public C getThird() {
     return third;
   }
   
   public String toString() {
     return "(" + first + "," + second + "," + third + ")";
+  }
+  
+  @Override
+  public int compareTo(Triple<A,B,C> o) {
+    int cmp = ((Comparable<A>) first).compareTo(o.first);
+    if (cmp == 0) {
+      cmp = ((Comparable<B>) second).compareTo(o.second);
+      if (cmp == 0) {
+        cmp = ((Comparable<C>) third).compareTo(o.third);
+      }
+    }
+    
+    return cmp;
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    if (o instanceof Triple) {
+      Triple<A,B,C> p = (Triple<A,B,C>) o;
+      return first.equals(p.first) && second.equals(p.second) && third.equals(p.third);
+    }
+    
+    return false;
+  }
+  
+  @Override
+  public int hashCode() {
+    return first.hashCode() + second.hashCode() + third.hashCode();
   }
 }
