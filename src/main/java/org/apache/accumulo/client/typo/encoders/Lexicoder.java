@@ -1,3 +1,5 @@
+package org.apache.accumulo.client.typo.encoders;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -14,25 +16,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.accumulo.client.typo;
-
-import org.apache.accumulo.client.typo.encoders.Encoder;
-import org.apache.accumulo.client.typo.encoders.Lexicoder;
 
 /**
- * 
+ * An encoder that produces byte arrays in which the lexicographic sort order corresponds to the types sort order.
  */
-public class TypoEncoders<RT,CFT,CQT,VT> {
-  Lexicoder<RT> rowLexEnc;
-  Lexicoder<CFT> colfLexEnc;
-  Lexicoder<CQT> colqLexEnc;
-  Encoder<VT> valEnc;
-  
-  public TypoEncoders(Lexicoder<RT> rowLexEnc, Lexicoder<CFT> colfLexEnc, Lexicoder<CQT> colqLexEnc, Encoder<VT> valEnc) {
-    this.rowLexEnc = rowLexEnc;
-    this.colfLexEnc = colfLexEnc;
-    this.colqLexEnc = colqLexEnc;
-    this.valEnc = valEnc;
-  }
-  
+public interface Lexicoder<T> extends Encoder<T> {
+
 }

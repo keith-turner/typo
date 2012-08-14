@@ -19,7 +19,7 @@ package org.apache.accumulo.client.typo.encoders;
 /**
  * 
  */
-public abstract class Encoder<T> {
+public interface Encoder<T> {
   public abstract byte[] toBytes(T data);
   public abstract T fromBytes(byte[] data);
 }

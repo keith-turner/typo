@@ -14,25 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.accumulo.client.typo;
-
-import org.apache.accumulo.client.typo.encoders.Encoder;
-import org.apache.accumulo.client.typo.encoders.Lexicoder;
+package org.apache.accumulo.client.typo.encoders;
 
 /**
  * 
  */
-public class TypoEncoders<RT,CFT,CQT,VT> {
-  Lexicoder<RT> rowLexEnc;
-  Lexicoder<CFT> colfLexEnc;
-  Lexicoder<CQT> colqLexEnc;
-  Encoder<VT> valEnc;
+public class DoubleLexicoder implements Lexicoder<Double> {
   
-  public TypoEncoders(Lexicoder<RT> rowLexEnc, Lexicoder<CFT> colfLexEnc, Lexicoder<CQT> colqLexEnc, Encoder<VT> valEnc) {
-    this.rowLexEnc = rowLexEnc;
-    this.colfLexEnc = colfLexEnc;
-    this.colqLexEnc = colqLexEnc;
-    this.valEnc = valEnc;
+  private ULongLexicoder longEncoder = new ULongLexicoder();
+  
+  @Override
+  public byte[] toBytes(Double d) {
+    long l = Double.doubleToRawLongBits(d);
+    if (l < 0)
+      l = ~l;
+    else
+      l = l ^ 0x8000000000000000l;
+    
+    return longEncoder.toBytes(l);
+  }
+  
+  @Override
+  public Double fromBytes(byte[] data) {
+    long l = longEncoder.fromBytes(data);
+    if (l < 0)
+      l = l ^ 0x8000000000000000l;
+    else
+      l = ~l;
+    return Double.longBitsToDouble(l);
   }
   
 }

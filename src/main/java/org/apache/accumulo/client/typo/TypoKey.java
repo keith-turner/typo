@@ -1,6 +1,6 @@
 package org.apache.accumulo.client.typo;
 
-import org.apache.accumulo.client.typo.encoders.LexEncoder;
+import org.apache.accumulo.client.typo.encoders.Lexicoder;
 import org.apache.accumulo.core.data.Key;
 import org.apache.accumulo.core.util.TextUtil;
 import org.apache.hadoop.io.Text;
@@ -34,15 +34,15 @@ public class TypoKey<RT,CFT,CQT> {
   private Text cv;
   private long ts;
 
-  private LexEncoder<RT> rowLexEnc;
-  private LexEncoder<CFT> colfLexEnc;
-  private LexEncoder<CQT> colqLexEnc;
+  private Lexicoder<RT> rowLexEnc;
+  private Lexicoder<CFT> colfLexEnc;
+  private Lexicoder<CQT> colqLexEnc;
   
-  public TypoKey(LexEncoder<RT> rowLexEnc, LexEncoder<CFT> colfLexEnc, LexEncoder<CQT> colqLexEnc) {
+  public TypoKey(Lexicoder<RT> rowLexEnc, Lexicoder<CFT> colfLexEnc, Lexicoder<CQT> colqLexEnc) {
     this(new Key(), rowLexEnc, colfLexEnc, colqLexEnc);
   }
 
-  public TypoKey(Key key, LexEncoder<RT> rowLexEnc, LexEncoder<CFT> colfLexEnc, LexEncoder<CQT> colqLexEnc) {
+  public TypoKey(Key key, Lexicoder<RT> rowLexEnc, Lexicoder<CFT> colfLexEnc, Lexicoder<CQT> colqLexEnc) {
     this.rowLexEnc = rowLexEnc;
     this.colfLexEnc = colfLexEnc;
     this.colqLexEnc = colqLexEnc;

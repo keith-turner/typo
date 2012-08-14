@@ -17,7 +17,7 @@
 package org.apache.accumulo.client.typo;
 
 import org.apache.accumulo.client.typo.encoders.Encoder;
-import org.apache.accumulo.client.typo.encoders.LexEncoder;
+import org.apache.accumulo.client.typo.encoders.Lexicoder;
 import org.apache.accumulo.core.client.ScannerBase;
 import org.apache.accumulo.core.data.Range;
 import org.apache.hadoop.io.Text;
@@ -35,7 +35,7 @@ public class Typo<RT,CFT,CQT,VT> {
    * @param doubleEncoder
    * @param stringEncoder2
    */
-  public Typo(LexEncoder<RT> rowLexEnc, LexEncoder<CFT> colfLexEnc, LexEncoder<CQT> colqLexEnc, Encoder<VT> valEnc) {
+  public Typo(Lexicoder<RT> rowLexEnc, Lexicoder<CFT> colfLexEnc, Lexicoder<CQT> colqLexEnc, Encoder<VT> valEnc) {
     ae = new TypoEncoders<RT,CFT,CQT,VT>(rowLexEnc, colfLexEnc, colqLexEnc, valEnc);
   }
 

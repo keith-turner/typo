@@ -14,25 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.accumulo.client.typo;
-
-import org.apache.accumulo.client.typo.encoders.Encoder;
-import org.apache.accumulo.client.typo.encoders.Lexicoder;
+package org.apache.accumulo.client.typo.tuples;
 
 /**
  * 
  */
-public class TypoEncoders<RT,CFT,CQT,VT> {
-  Lexicoder<RT> rowLexEnc;
-  Lexicoder<CFT> colfLexEnc;
-  Lexicoder<CQT> colqLexEnc;
-  Encoder<VT> valEnc;
+public class Triple<A,B,C> extends Pair<A,B> {
+  private C third;
   
-  public TypoEncoders(Lexicoder<RT> rowLexEnc, Lexicoder<CFT> colfLexEnc, Lexicoder<CQT> colqLexEnc, Encoder<VT> valEnc) {
-    this.rowLexEnc = rowLexEnc;
-    this.colfLexEnc = colfLexEnc;
-    this.colqLexEnc = colqLexEnc;
-    this.valEnc = valEnc;
+  public Triple(A first, B second, C third) {
+    super(first, second);
+    this.third = third;
   }
   
+  public C getThird() {
+    return third;
+  }
+  
+  public String toString() {
+    return "(" + first + "," + second + "," + third + ")";
+  }
 }

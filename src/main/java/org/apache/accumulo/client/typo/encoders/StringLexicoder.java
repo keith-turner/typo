@@ -14,25 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.accumulo.client.typo;
+package org.apache.accumulo.client.typo.encoders;
 
-import org.apache.accumulo.client.typo.encoders.Encoder;
-import org.apache.accumulo.client.typo.encoders.Lexicoder;
+import java.io.UnsupportedEncodingException;
 
 /**
  * 
  */
-public class TypoEncoders<RT,CFT,CQT,VT> {
-  Lexicoder<RT> rowLexEnc;
-  Lexicoder<CFT> colfLexEnc;
-  Lexicoder<CQT> colqLexEnc;
-  Encoder<VT> valEnc;
+public class StringLexicoder implements Lexicoder<String> {
   
-  public TypoEncoders(Lexicoder<RT> rowLexEnc, Lexicoder<CFT> colfLexEnc, Lexicoder<CQT> colqLexEnc, Encoder<VT> valEnc) {
-    this.rowLexEnc = rowLexEnc;
-    this.colfLexEnc = colfLexEnc;
-    this.colqLexEnc = colqLexEnc;
-    this.valEnc = valEnc;
+  @Override
+  public byte[] toBytes(String data) {
+    try {
+      return data.getBytes("UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  @Override
+  public String fromBytes(byte[] data) {
+    try {
+      return new String(data, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
   
 }

@@ -14,25 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.accumulo.client.typo;
+package org.apache.accumulo.client.typo.encoders;
 
-import org.apache.accumulo.client.typo.encoders.Encoder;
-import org.apache.accumulo.client.typo.encoders.Lexicoder;
 
 /**
  * 
  */
-public class TypoEncoders<RT,CFT,CQT,VT> {
-  Lexicoder<RT> rowLexEnc;
-  Lexicoder<CFT> colfLexEnc;
-  Lexicoder<CQT> colqLexEnc;
-  Encoder<VT> valEnc;
+public class ReverseLexicoder<T> implements Lexicoder<T> {
   
-  public TypoEncoders(Lexicoder<RT> rowLexEnc, Lexicoder<CFT> colfLexEnc, Lexicoder<CQT> colqLexEnc, Encoder<VT> valEnc) {
-    this.rowLexEnc = rowLexEnc;
-    this.colfLexEnc = colfLexEnc;
-    this.colqLexEnc = colqLexEnc;
-    this.valEnc = valEnc;
+  private Lexicoder<T> lexicoder;
+  
+  public ReverseLexicoder(Lexicoder<T> lexicoder) {
+    this.lexicoder = lexicoder;
   }
   
+  @Override
+  public byte[] toBytes(T data) {
+    byte[] bytes = PairLexicoder.escape(lexicoder.toBytes(data));
+    byte[] ret = new byte[bytes.length + 1];
+    
+    for (int i = 0; i < bytes.length; i++)
+      ret[i] = (byte) (0xff - (0xff & bytes[i]));
+    
+    ret[bytes.length] = (byte) 0xff;
+    
+    return ret;
+  }
+  
+  @Override
+  public T fromBytes(byte[] data) {
+    byte ret[] = new byte[data.length - 1];
+    
+    for (int i = 0; i < ret.length; i++)
+      ret[i] = (byte) (0xff - (0xff & data[i]));
+      
+     return lexicoder.fromBytes(PairLexicoder.unescape(ret));
+  }
 }

@@ -22,22 +22,29 @@ import org.apache.accumulo.client.typo.Typo;
 import org.apache.accumulo.client.typo.TypoKey;
 import org.apache.accumulo.client.typo.TypoMutation;
 import org.apache.accumulo.client.typo.TypoScanner;
-import org.apache.accumulo.client.typo.encoders.DoubleLexicoder;
-import org.apache.accumulo.client.typo.encoders.LongLexicoder;
+import org.apache.accumulo.client.typo.encoders.PairLexicoder;
 import org.apache.accumulo.client.typo.encoders.StringLexicoder;
+import org.apache.accumulo.client.typo.encoders.ULongLexicoder;
+import org.apache.accumulo.client.typo.tuples.Pair;
 import org.apache.accumulo.core.Constants;
 import org.apache.accumulo.core.client.BatchWriter;
 import org.apache.accumulo.core.client.Connector;
 import org.apache.accumulo.core.client.Scanner;
 import org.apache.accumulo.core.client.mock.MockInstance;
 
-class MyTypo extends Typo<Long,String,Double,String> {
-  public MyTypo() {
-    super(new LongLexicoder(), new StringLexicoder(), new DoubleLexicoder(), new StringLexicoder());
+
+class GraphTypo extends Typo<Pair<Long,Long>,String,String,Long> {
+  public GraphTypo() {
+    super(new PairLexicoder<Long,Long>(new ULongLexicoder(), new ULongLexicoder()), new StringLexicoder(), new StringLexicoder(), new ULongLexicoder());
   }
 }
 
-public class TypoExample {
+/**
+ * A simple example of storing graphs in Accumlo. This is done via storing edges in the Accumulo row. An edge is composed of two Long node identifiers.
+ * 
+ */
+
+public class GraphExample {
   public static void main(String[] args) throws Exception {
     MockInstance mi = new MockInstance();
     Connector conn = mi.getConnector("root", "secret");
@@ -50,38 +57,46 @@ public class TypoExample {
   static void insertData(Connector conn) throws Exception {
     BatchWriter bw = conn.createBatchWriter("foo", 1000000, 60000, 2);
     
-    MyTypo myTypo = new MyTypo();
+    GraphTypo graphTypo = new GraphTypo();
     
-    for (long row = -4; row < 4; row++) {
-      TypoMutation<Long,String,Double,String> mut = myTypo.newMutation(row);
-      mut.put("sq", Math.pow(row, 2), "val");
-      mut.put("cube", Math.pow(row, 3), "val");
-      bw.addMutation(mut);
-    }
+    TypoMutation<Pair<Long,Long>,String,String,Long> edge1 = graphTypo.newMutation(new Pair<Long, Long>(95l,9023580982l));
+    edge1.put("counts", "clicked", 20l);
+    edge1.put("counts", "droped", 30l);
+    bw.addMutation(edge1);
+    
+    TypoMutation<Pair<Long,Long>,String,String,Long> edge2 = graphTypo.newMutation(new Pair<Long, Long>(95l,10567l));
+    edge2.put("counts", "clicked", 67l);
+    edge2.put("counts", "droped", 90l);
+    bw.addMutation(edge2);
+    
+    TypoMutation<Pair<Long,Long>,String,String,Long> edge3 = graphTypo.newMutation(new Pair<Long, Long>(95l,123l));
+    edge3.put("counts", "clicked", 2l);
+    edge3.put("counts", "droped", 6000l);
+    bw.addMutation(edge3);
+    
+    
+    TypoMutation<Pair<Long,Long>,String,String,Long> edge4 = graphTypo.newMutation(new Pair<Long, Long>(23l,123l));
+    edge4.put("counts", "clicked", 8l);
+    edge4.put("counts", "droped", 4l);
+    bw.addMutation(edge4);
     
     bw.close();
   }
   
   static void scanData(Connector conn) throws Exception {
-    MyTypo myTypo = new MyTypo();
+    GraphTypo graphTypo = new GraphTypo();
+
     Scanner scanner = conn.createScanner("foo", Constants.NO_AUTHS);
     
-    scanner.setRange(myTypo.newRange(-2l, 3l));
+    // scan over all edge that connect to node 95
+    scanner.setRange(graphTypo.newRange(new Pair<Long,Long>(95l, 0l), new Pair<Long,Long>(95l, Long.MAX_VALUE)));
     
-    TypoScanner<Long,String,Double,String> typoScanner = myTypo.newScanner(scanner);
+    TypoScanner<Pair<Long,Long>,String,String,Long> typoScanner = graphTypo.newScanner(scanner);
     
-    typoScanner.fetchColumnFamily("sq");
-
-    long rowSum = 0;
-    double cqSum = 0;
-    
-    for (Entry<TypoKey<Long,String,Double>,String> entry : typoScanner) {
-      rowSum += entry.getKey().getRow();
-      cqSum += entry.getKey().getColumnQualifier();
+    for (Entry<TypoKey<Pair<Long,Long>,String,String>,Long> entry : typoScanner) {
       System.out.println(entry);
     }
     
-    System.out.println("rowSum : " + rowSum);
-    System.out.println("cqSum  : " + cqSum);
+
   }
 }
