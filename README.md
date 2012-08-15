@@ -117,3 +117,4 @@ rowSum : 3
 cqSum  : 19.0
 </pre>
 
+The souce code contains [additional examples](https://github.com/keith-turner/typo/tree/master/src/main/java/org/apache/accumulo/client/typo/example).

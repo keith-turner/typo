@@ -31,7 +31,13 @@ import org.apache.accumulo.core.util.TextUtil;
 import org.apache.hadoop.io.Text;
 
 /**
+ * Typo is an abstraction layer for Accumulo with the following goals.
  * 
+ * <ul>
+ * <li>Make it easy to read and write Java types to Accumulo.
+ * <li>Make it easy to encode data in such a way that it sorts correctly lexicographically.
+ * <li>Make it easy to store tuples in Accumulo key fields and do this in such a way that it satisfies the previous two goals.
+ * </ul>
  */
 public abstract class Typo<RT,CFT,CQT,VT> {
   
