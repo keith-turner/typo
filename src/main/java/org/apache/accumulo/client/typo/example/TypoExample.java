@@ -110,7 +110,7 @@ public class TypoExample {
     double cqSum = 0;
     
     // read data from Accumulo using java types
-    for (Entry<MyTypo.TypoKey,String> entry : typoScanner) {
+    for (Entry<MyTypo.Key,String> entry : typoScanner) {
       rowSum += entry.getKey().getRow();
       cqSum += entry.getKey().getColumnQualifier();
       System.out.println(entry);

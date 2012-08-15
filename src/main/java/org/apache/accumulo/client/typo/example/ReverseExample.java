@@ -83,7 +83,7 @@ public class ReverseExample {
 
     RDTypo.Scanner typoScanner = rdTypo.newScanner(scanner);
 
-    for (Entry<RDTypo.TypoKey,Text> entry : typoScanner) {
+    for (Entry<RDTypo.Key,Text> entry : typoScanner) {
       System.out.println(entry);
     }
   }

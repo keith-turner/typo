@@ -90,7 +90,7 @@ public class GraphExample {
     
     GraphTypo.Scanner typoScanner = graphTypo.newScanner(scanner);
     
-    for (Entry<GraphTypo.TypoKey,Long> entry : typoScanner) {
+    for (Entry<GraphTypo.Key,Long> entry : typoScanner) {
       System.out.println(entry);
     }
     

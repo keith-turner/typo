@@ -24,7 +24,6 @@ import org.apache.accumulo.client.typo.encoders.Encoder;
 import org.apache.accumulo.client.typo.encoders.Lexicoder;
 import org.apache.accumulo.core.client.RowIterator;
 import org.apache.accumulo.core.client.ScannerBase;
-import org.apache.accumulo.core.data.Key;
 import org.apache.accumulo.core.data.Range;
 import org.apache.accumulo.core.data.Value;
 import org.apache.accumulo.core.security.ColumnVisibility;
@@ -38,7 +37,7 @@ public abstract class Typo<RT,CFT,CQT,VT> {
   
   private TypoEncoders<RT,CFT,CQT,VT> ae;
 
-  public class Scanner implements Iterable<Entry<TypoKey,VT>> {
+  public class Scanner implements Iterable<Entry<Key,VT>> {
     
     private ScannerBase scanner;
     
@@ -59,12 +58,12 @@ public abstract class Typo<RT,CFT,CQT,VT> {
     }
     
     @Override
-    public Iterator<Entry<TypoKey,VT>> iterator() {
+    public Iterator<Entry<Key,VT>> iterator() {
       return new TypoIterator(scanner.iterator());
     }
   }
 
-  public class TypoKey {
+  public class Key {
     private RT row;
     private CFT cf;
     private CQT cq;
@@ -73,9 +72,9 @@ public abstract class Typo<RT,CFT,CQT,VT> {
     private boolean isDelete = false;
     
     
-    public TypoKey() {}
+    public Key() {}
     
-    public TypoKey setKey(Key key) {
+    public Key setKey(org.apache.accumulo.core.data.Key key) {
       row = ae.rowLexEnc.fromBytes(key.getRowData().toArray());
       cf = ae.colfLexEnc.fromBytes(key.getColumnFamilyData().toArray());
       cq = ae.colqLexEnc.fromBytes(key.getColumnQualifierData().toArray());
@@ -85,8 +84,10 @@ public abstract class Typo<RT,CFT,CQT,VT> {
       return this;
     }
     
-    public Key getKey() {
-      Key key = new Key(ae.rowLexEnc.toBytes(getRow()), ae.colfLexEnc.toBytes(cf), ae.colqLexEnc.toBytes(cq), TextUtil.getBytes(cv), ts);
+    public org.apache.accumulo.core.data.Key getKey() {
+      org.apache.accumulo.core.data.Key key = new org.apache.accumulo.core.data.Key(ae.rowLexEnc.toBytes(getRow()), ae.colfLexEnc.toBytes(cf),
+          ae.colqLexEnc.toBytes(cq),
+          TextUtil.getBytes(cv), ts);
       key.setDeleted(isDelete);
       return key;
     }
@@ -95,7 +96,7 @@ public abstract class Typo<RT,CFT,CQT,VT> {
       return row;
     }
 
-    public TypoKey setRow(RT row) {
+    public Key setRow(RT row) {
       this.row = row;
       return this;
     }
@@ -104,7 +105,7 @@ public abstract class Typo<RT,CFT,CQT,VT> {
       return cf;
     }
 
-    public TypoKey setColumnFamily(CFT cf) {
+    public Key setColumnFamily(CFT cf) {
       this.cf = cf;
       return this;
     }
@@ -113,7 +114,7 @@ public abstract class Typo<RT,CFT,CQT,VT> {
       return cq;
     }
 
-    public TypoKey setColumnQualifier(CQT cq) {
+    public Key setColumnQualifier(CQT cq) {
       this.cq = cq;
       return this;
     }
@@ -122,7 +123,7 @@ public abstract class Typo<RT,CFT,CQT,VT> {
       return cv;
     }
 
-    public TypoKey getColumnVisibility(Text cv) {
+    public Key getColumnVisibility(Text cv) {
       this.cv = cv;
       return this;
     }
@@ -131,7 +132,7 @@ public abstract class Typo<RT,CFT,CQT,VT> {
       return ts;
     }
 
-    public TypoKey setTimestamp(long ts) {
+    public Key setTimestamp(long ts) {
       this.ts = ts;
       return this;
     }
@@ -140,7 +141,7 @@ public abstract class Typo<RT,CFT,CQT,VT> {
       return isDelete;
     }
     
-    public TypoKey setDeleted(boolean del) {
+    public Key setDeleted(boolean del) {
       this.isDelete = del;
       return this;
     }
@@ -150,24 +151,24 @@ public abstract class Typo<RT,CFT,CQT,VT> {
     }
   }
   
-  public class TypoIterator implements Iterator<Entry<TypoKey,VT>> {
+  public class TypoIterator implements Iterator<Entry<Key,VT>> {
     
-    private Iterator<Entry<Key,Value>> iter;
+    private Iterator<Entry<org.apache.accumulo.core.data.Key,Value>> iter;
 
-    private class TypoEntry implements Map.Entry<TypoKey,VT> {
+    private class TypoEntry implements Map.Entry<Key,VT> {
       
-      private Entry<Key,Value> srcEntry;
-      private TypoKey tk;
+      private Entry<org.apache.accumulo.core.data.Key,Value> srcEntry;
+      private Key tk;
       private VT val;
       
-      public TypoEntry(Entry<Key,Value> srcEntry, TypoKey tk, VT val) {
+      public TypoEntry(Entry<org.apache.accumulo.core.data.Key,Value> srcEntry, Key tk, VT val) {
         this.srcEntry = srcEntry;
         this.tk = tk;
         this.val = val;
       }
       
       @Override
-      public TypoKey getKey() {
+      public Key getKey() {
         return tk;
       }
       
@@ -186,7 +187,7 @@ public abstract class Typo<RT,CFT,CQT,VT> {
       }
     }
     
-    public TypoIterator(Iterator<Entry<Key,Value>> iterator) {
+    public TypoIterator(Iterator<Entry<org.apache.accumulo.core.data.Key,Value>> iterator) {
       this.iter = iterator;
     }
     
@@ -196,9 +197,9 @@ public abstract class Typo<RT,CFT,CQT,VT> {
     }
     
     @Override
-    public Entry<TypoKey,VT> next() {
-      Entry<Key,Value> srcEntry = iter.next();
-      TypoKey tk = new TypoKey().setKey(srcEntry.getKey());
+    public Entry<Key,VT> next() {
+      Entry<org.apache.accumulo.core.data.Key,Value> srcEntry = iter.next();
+      Key tk = new Key().setKey(srcEntry.getKey());
       VT val = ae.valEnc.fromBytes(srcEntry.getValue().get());
       
       return new TypoEntry(srcEntry, tk, val);
@@ -274,7 +275,7 @@ public abstract class Typo<RT,CFT,CQT,VT> {
    * @param iter
    * @return
    */
-  public TypoIterator newIterator(Iterator<Entry<Key,Value>> iter) {
+  public TypoIterator newIterator(Iterator<Entry<org.apache.accumulo.core.data.Key,Value>> iter) {
     return new TypoIterator(iter);
   }
 
@@ -290,8 +291,8 @@ public abstract class Typo<RT,CFT,CQT,VT> {
     return new Range(start == null ? null : new Text(ae.rowLexEnc.toBytes(start)), startInc, end == null ? null : new Text(ae.rowLexEnc.toBytes(end)), endInc);
   }
   
-  public TypoKey newKey() {
-    return new TypoKey();
+  public Key newKey() {
+    return new Key();
   }
   
   public TypoEncoders<RT,CFT,CQT,VT> getEncoders() {
