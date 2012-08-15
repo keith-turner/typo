@@ -19,8 +19,6 @@ package org.apache.accumulo.client.typo;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import org.apache.accumulo.client.typo.encoders.Encoder;
-import org.apache.accumulo.client.typo.encoders.Lexicoder;
 import org.apache.accumulo.core.data.Key;
 import org.apache.accumulo.core.data.Value;
 import org.apache.accumulo.core.util.format.Formatter;
@@ -28,13 +26,13 @@ import org.apache.accumulo.core.util.format.Formatter;
 /**
  * 
  */
-public class TypoFormatter<RT,CFT,CQT,VT> implements Formatter {
+public class TypoFormatter implements Formatter {
   
-  private TypoEncoders<RT,CFT,CQT,VT> ae;
   private Iterator<Entry<Key,Value>> iter;
+  private Typo<?,?,?,?> typo;
   
-  public TypoFormatter(Lexicoder<RT> rowLexEnc, Lexicoder<CFT> colfLexEnc, Lexicoder<CQT> colqLexEnc, Encoder<VT> valEnc) {
-    ae = new TypoEncoders<RT,CFT,CQT,VT>(rowLexEnc, colfLexEnc, colqLexEnc, valEnc);
+  public TypoFormatter(Typo<?,?,?,?> typo) {
+    this.typo = typo;
   }
 
   @Override
@@ -45,10 +43,11 @@ public class TypoFormatter<RT,CFT,CQT,VT> implements Formatter {
   @Override
   public String next() {
     Entry<Key,Value> next = iter.next();
-    TypoKey<RT,CFT,CFT> typoKey = new TypoKey<RT,CFT,CFT>(next.getKey(), ae.rowLexEnc, ae.colfLexEnc, ae.colfLexEnc);
     
+    TypoKey<?,?,?> typoKey = typo.newKey().setKey(next.getKey());
+
     return typoKey.getRow() + " " + typoKey.getColumnFamily() + " " + typoKey.getColumnQualifier() + "  [" + typoKey.getColumnVisibility() + "] "
-        + ae.valEnc.fromBytes(next.getValue().get());
+        + typo.getEncoders().getValueEncoder().fromBytes(next.getValue().get());
   }
   
   @Override

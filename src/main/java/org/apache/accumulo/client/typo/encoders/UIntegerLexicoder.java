@@ -51,6 +51,9 @@ public class UIntegerLexicoder implements Lexicoder<Integer> {
   @Override
   public Integer fromBytes(byte[] data) {
     
+    if (data[0] < 0 || data[0] > 8)
+      throw new IllegalArgumentException("Unexpected length " + (0xff & data[0]));
+
     int i = 0;
     int shift = 0;
     

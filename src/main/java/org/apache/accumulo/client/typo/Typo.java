@@ -31,10 +31,10 @@ import org.apache.hadoop.io.Text;
 /**
  * 
  */
-public class Typo<RT,CFT,CQT,VT> {
+public abstract class Typo<RT,CFT,CQT,VT> {
   
   private TypoEncoders<RT,CFT,CQT,VT> ae;
-  
+
   /**
    * @param longEncoder
    * @param stringEncoder
@@ -77,5 +77,9 @@ public class Typo<RT,CFT,CQT,VT> {
   
   public TypoKey<RT,CFT,CQT> newKey() {
     return new TypoKey<RT,CFT,CQT>(ae.rowLexEnc, ae.colfLexEnc, ae.colqLexEnc);
+  }
+  
+  public TypoEncoders<RT,CFT,CQT,VT> getEncoders() {
+    return ae;
   }
 }

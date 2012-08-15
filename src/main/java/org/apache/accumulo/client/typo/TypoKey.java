@@ -33,6 +33,7 @@ public class TypoKey<RT,CFT,CQT> {
   private CQT cq;
   private Text cv;
   private long ts;
+  private boolean isDelete = false;
 
   private Lexicoder<RT> rowLexEnc;
   private Lexicoder<CFT> colfLexEnc;
@@ -49,58 +50,76 @@ public class TypoKey<RT,CFT,CQT> {
     setKey(key);
   }
   
-  public void setKey(Key key) {
+  public TypoKey<RT,CFT,CQT> setKey(Key key) {
     row = rowLexEnc.fromBytes(key.getRowData().toArray());
     cf = colfLexEnc.fromBytes(key.getColumnFamilyData().toArray());
     cq = colqLexEnc.fromBytes(key.getColumnQualifierData().toArray());
     cv = key.getColumnVisibility();
     ts = key.getTimestamp();
+    isDelete = key.isDeleted();
+    return this;
   }
   
   public Key getKey() {
-    return new Key(rowLexEnc.toBytes(getRow()), colfLexEnc.toBytes(cf), colqLexEnc.toBytes(cq), TextUtil.getBytes(cv), ts);
+    Key key = new Key(rowLexEnc.toBytes(getRow()), colfLexEnc.toBytes(cf), colqLexEnc.toBytes(cq), TextUtil.getBytes(cv), ts);
+    key.setDeleted(isDelete);
+    return key;
   }
   
   public RT getRow() {
     return row;
   }
   
-  public void setRow(RT row) {
+  public TypoKey<RT,CFT,CQT> setRow(RT row) {
     this.row = row;
+    return this;
   }
 
   public CFT getColumnFamily() {
     return cf;
   }
   
-  public void setColumnFamily(CFT cf) {
+  public TypoKey<RT,CFT,CQT> setColumnFamily(CFT cf) {
     this.cf = cf;
+    return this;
   }
 
   public CQT getColumnQualifier() {
     return cq;
   }
   
-  public void setColumnQualifier(CQT cq) {
+  public TypoKey<RT,CFT,CQT> setColumnQualifier(CQT cq) {
     this.cq = cq;
+    return this;
   }
 
   public Text getColumnVisibility() {
     return cv;
   }
   
-  public void getColumnVisibility(Text cv) {
+  public TypoKey<RT,CFT,CQT> getColumnVisibility(Text cv) {
     this.cv = cv;
+    return this;
   }
 
   public long getTimestamp() {
     return ts;
   }
   
-  public void setTimestamp(long ts) {
+  public TypoKey<RT,CFT,CQT> setTimestamp(long ts) {
     this.ts = ts;
+    return this;
   }
   
+  public boolean isDeleted() {
+    return isDelete;
+  }
+  
+  public TypoKey<RT,CFT,CQT> setDeleted(boolean del) {
+    this.isDelete = del;
+    return this;
+  }
+
   public String toString() {
     return row + " " + cf + " " + cq + " [" + cv + "] " + ts;
   }

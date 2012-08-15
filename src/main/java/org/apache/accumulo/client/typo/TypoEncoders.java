@@ -35,4 +35,19 @@ public class TypoEncoders<RT,CFT,CQT,VT> {
     this.valEnc = valEnc;
   }
   
+  public Lexicoder<RT> getRowLexicoder() {
+    return rowLexEnc;
+  }
+  
+  public Lexicoder<CFT> getColumnFamilyLexicoder() {
+    return colfLexEnc;
+  }
+  
+  public Lexicoder<CQT> getColumnQualifierLexicoder() {
+    return colqLexEnc;
+  }
+  
+  public Encoder<VT> getValueEncoder() {
+    return valEnc;
+  }
 }

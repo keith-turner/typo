@@ -55,6 +55,9 @@ public class ULongLexicoder implements Lexicoder<Long> {
     long l = 0;
     int shift = 0;
 
+    if (data[0] < 0 || data[0] > 16)
+      throw new IllegalArgumentException("Unexpected length " + (0xff & data[0]));
+
     for (int i = data.length - 1; i >= 1; i--) {
       l += (data[i] & 0xffl) << shift;
       shift += 8;

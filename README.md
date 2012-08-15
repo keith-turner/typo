@@ -12,9 +12,35 @@ This project is an experiment and its API may change drastically.
 Below is a simple example of reading and writing data to Accumulo using Typo.
 
 ```java
+// An easy way to use Typo is to create a class that extends it and use the 
+// subtype everywhere in your code.  This is what was done below. Nomrally the
+// class below would be public and in its own file.  To keep the example self 
+// contained, this was not done.
+
 class MyTypo extends Typo<Long,String,Double,String> {
   public MyTypo() {
-    super(new LongEncoder(), new StringEncoder(), new DoubleEncoder(), new StringEncoder());
+    super(new LongLexicoder(), new StringLexicoder(), new DoubleLexicoder(), new StringLexicoder());
+  }
+}
+
+
+// If you would like to create a formatter for the Accumulo shell then create a
+// class like the following. This class and Typo will then need to be placed on
+// the Accumulo classpath.
+
+class MyFormatter extends TypoFormatter {
+  public MyFormatter() {
+    super(new MyTypo());
+  }
+}
+
+/*
+ * A Typo Constraint can also be created like the Formatter was.
+ */
+
+class MyConstraint extends TypoConstraint {
+  public MyConstraint() {
+    super(new MyTypo());
   }
 }
 
@@ -28,6 +54,9 @@ public class TypoExample {
     scanData(conn);
   }
   
+  /*
+   * Insert data using java types
+   */
   static void insertData(Connector conn) throws Exception {
     BatchWriter bw = conn.createBatchWriter("foo", 1000000, 60000, 2);
     
@@ -47,15 +76,18 @@ public class TypoExample {
     MyTypo myTypo = new MyTypo();
     Scanner scanner = conn.createScanner("foo", Constants.NO_AUTHS);
     
+    // you can create a range using java types
     scanner.setRange(myTypo.newRange(-2l, 3l));
     
     TypoScanner<Long,String,Double,String> typoScanner = myTypo.newScanner(scanner);
     
+    // you can fetch columns using Java types
     typoScanner.fetchColumnFamily("sq");
 
     long rowSum = 0;
     double cqSum = 0;
     
+    // read data from Accumulo using java types
     for (Entry<TypoKey<Long,String,Double>,String> entry : typoScanner) {
       rowSum += entry.getKey().getRow();
       cqSum += entry.getKey().getColumnQualifier();
