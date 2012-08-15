@@ -19,9 +19,6 @@ package org.apache.accumulo.client.typo.example;
 import java.util.Map.Entry;
 
 import org.apache.accumulo.client.typo.Typo;
-import org.apache.accumulo.client.typo.TypoKey;
-import org.apache.accumulo.client.typo.TypoMutation;
-import org.apache.accumulo.client.typo.TypoScanner;
 import org.apache.accumulo.client.typo.encoders.PairLexicoder;
 import org.apache.accumulo.client.typo.encoders.StringLexicoder;
 import org.apache.accumulo.client.typo.encoders.ULongLexicoder;
@@ -59,23 +56,23 @@ public class GraphExample {
     
     GraphTypo graphTypo = new GraphTypo();
     
-    TypoMutation<Pair<Long,Long>,String,String,Long> edge1 = graphTypo.newMutation(new Pair<Long, Long>(95l,9023580982l));
+    GraphTypo.Mutation edge1 = graphTypo.newMutation(new Pair<Long,Long>(95l, 9023580982l));
     edge1.put("counts", "clicked", 20l);
     edge1.put("counts", "dropped", 30l);
     bw.addMutation(edge1);
     
-    TypoMutation<Pair<Long,Long>,String,String,Long> edge2 = graphTypo.newMutation(new Pair<Long, Long>(95l,10567l));
+    GraphTypo.Mutation edge2 = graphTypo.newMutation(new Pair<Long,Long>(95l, 10567l));
     edge2.put("counts", "clicked", 67l);
     edge2.put("counts", "dropped", 90l);
     bw.addMutation(edge2);
     
-    TypoMutation<Pair<Long,Long>,String,String,Long> edge3 = graphTypo.newMutation(new Pair<Long, Long>(95l,123l));
+    GraphTypo.Mutation edge3 = graphTypo.newMutation(new Pair<Long,Long>(95l, 123l));
     edge3.put("counts", "clicked", 2l);
     edge3.put("counts", "dropped", 6000l);
     bw.addMutation(edge3);
     
     
-    TypoMutation<Pair<Long,Long>,String,String,Long> edge4 = graphTypo.newMutation(new Pair<Long, Long>(23l,123l));
+    GraphTypo.Mutation edge4 = graphTypo.newMutation(new Pair<Long,Long>(23l, 123l));
     edge4.put("counts", "clicked", 8l);
     edge4.put("counts", "dropped", 4l);
     bw.addMutation(edge4);
@@ -91,9 +88,9 @@ public class GraphExample {
     // scan over all edge that connect to node 95
     scanner.setRange(graphTypo.newRange(new Pair<Long,Long>(95l, 0l), new Pair<Long,Long>(95l, Long.MAX_VALUE)));
     
-    TypoScanner<Pair<Long,Long>,String,String,Long> typoScanner = graphTypo.newScanner(scanner);
+    GraphTypo.Scanner typoScanner = graphTypo.newScanner(scanner);
     
-    for (Entry<TypoKey<Pair<Long,Long>,String,String>,Long> entry : typoScanner) {
+    for (Entry<GraphTypo.TypoKey,Long> entry : typoScanner) {
       System.out.println(entry);
     }
     

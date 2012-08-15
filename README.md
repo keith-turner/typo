@@ -44,6 +44,10 @@ class MyConstraint extends TypoConstraint {
   }
 }
 
+/**
+ * A simple example that reads from and write to Accumulo using Typo.
+ */
+
 public class TypoExample {
   public static void main(String[] args) throws Exception {
     MockInstance mi = new MockInstance();
@@ -63,7 +67,7 @@ public class TypoExample {
     MyTypo myTypo = new MyTypo();
     
     for (long row = -4; row < 4; row++) {
-      TypoMutation<Long,String,Double,String> mut = myTypo.newMutation(row);
+      MyTypo.Mutation mut = myTypo.newMutation(row);
       mut.put("sq", Math.pow(row, 2), "val");
       mut.put("cube", Math.pow(row, 3), "val");
       bw.addMutation(mut);
@@ -79,7 +83,7 @@ public class TypoExample {
     // you can create a range using java types
     scanner.setRange(myTypo.newRange(-2l, 3l));
     
-    TypoScanner<Long,String,Double,String> typoScanner = myTypo.newScanner(scanner);
+    MyTypo.Scanner typoScanner = myTypo.newScanner(scanner);
     
     // you can fetch columns using Java types
     typoScanner.fetchColumnFamily("sq");
@@ -88,7 +92,7 @@ public class TypoExample {
     double cqSum = 0;
     
     // read data from Accumulo using java types
-    for (Entry<TypoKey<Long,String,Double>,String> entry : typoScanner) {
+    for (Entry<MyTypo.TypoKey,String> entry : typoScanner) {
       rowSum += entry.getKey().getRow();
       cqSum += entry.getKey().getColumnQualifier();
       System.out.println(entry);

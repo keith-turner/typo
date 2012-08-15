@@ -21,9 +21,6 @@ import java.util.Date;
 import java.util.Map.Entry;
 
 import org.apache.accumulo.client.typo.Typo;
-import org.apache.accumulo.client.typo.TypoKey;
-import org.apache.accumulo.client.typo.TypoMutation;
-import org.apache.accumulo.client.typo.TypoScanner;
 import org.apache.accumulo.client.typo.encoders.DateLexicoder;
 import org.apache.accumulo.client.typo.encoders.ReverseLexicoder;
 import org.apache.accumulo.client.typo.encoders.StringLexicoder;
@@ -59,17 +56,17 @@ public class ReverseExample {
     Calendar cal = Calendar.getInstance();
     
     cal.set(2009, 1, 1, 22, 23, 24);
-    TypoMutation<Date,String,String,Text> mut1 = rdTypo.newMutation(cal.getTime());
+    RDTypo.Mutation mut1 = rdTypo.newMutation(cal.getTime());
     mut1.put("event", "meeting", new Text("@joes"));
     bw.addMutation(mut1);
     
     cal.set(2008, 1, 1, 22, 23, 24);
-    TypoMutation<Date,String,String,Text> mut2 = rdTypo.newMutation(cal.getTime());
+    RDTypo.Mutation mut2 = rdTypo.newMutation(cal.getTime());
     mut2.put("event", "meeting", new Text("@johns"));
     bw.addMutation(mut2);
     
     cal.set(2007, 1, 1, 22, 23, 24);
-    TypoMutation<Date,String,String,Text> mut3 = rdTypo.newMutation(cal.getTime());
+    RDTypo.Mutation mut3 = rdTypo.newMutation(cal.getTime());
     mut3.put("event", "meeting", new Text("@sues"));
     bw.addMutation(mut3);
 
@@ -84,9 +81,9 @@ public class ReverseExample {
     cal.set(2008, 2, 1, 22, 23, 24);
     scanner.setRange(rdTypo.newRange(cal.getTime(), null));
 
-    TypoScanner<Date,String,String,Text> typoScanner = rdTypo.newScanner(scanner);
+    RDTypo.Scanner typoScanner = rdTypo.newScanner(scanner);
 
-    for (Entry<TypoKey<Date,String,String>,Text> entry : typoScanner) {
+    for (Entry<RDTypo.TypoKey,Text> entry : typoScanner) {
       System.out.println(entry);
     }
   }
