@@ -23,14 +23,14 @@ public class UIntegerLexicoderTest extends LexicoderTest {
   public void testEncoding() {
     UIntegerLexicoder uil = new UIntegerLexicoder();
     
-    assertEqualsB(uil.toBytes(0), new byte[] {0x00});
-    assertEqualsB(uil.toBytes(0x01), new byte[] {0x01, 0x01});
-    assertEqualsB(uil.toBytes(0x0102), new byte[] {0x02, 0x01, 0x02});
-    assertEqualsB(uil.toBytes(0x010203), new byte[] {0x03, 0x01, 0x02, 0x03});
-    assertEqualsB(uil.toBytes(0x01020304), new byte[] {0x04, 0x01, 0x02, 0x03, 0x04});
-    assertEqualsB(uil.toBytes(0xff020304), new byte[] {0x05, 0x02, 0x03, 0x04});
-    assertEqualsB(uil.toBytes(0xffff0304), new byte[] {0x06, 0x03, 0x04});
-    assertEqualsB(uil.toBytes(0xffffff04), new byte[] {0x07, 0x04});
-    assertEqualsB(uil.toBytes(-1), new byte[] {0x08});
+    assertEqualsB(uil.encode(0), new byte[] {0x00});
+    assertEqualsB(uil.encode(0x01), new byte[] {0x01, 0x01});
+    assertEqualsB(uil.encode(0x0102), new byte[] {0x02, 0x01, 0x02});
+    assertEqualsB(uil.encode(0x010203), new byte[] {0x03, 0x01, 0x02, 0x03});
+    assertEqualsB(uil.encode(0x01020304), new byte[] {0x04, 0x01, 0x02, 0x03, 0x04});
+    assertEqualsB(uil.encode(0xff020304), new byte[] {0x05, 0x02, 0x03, 0x04});
+    assertEqualsB(uil.encode(0xffff0304), new byte[] {0x06, 0x03, 0x04});
+    assertEqualsB(uil.encode(0xffffff04), new byte[] {0x07, 0x04});
+    assertEqualsB(uil.encode(-1), new byte[] {0x08});
   }
 }

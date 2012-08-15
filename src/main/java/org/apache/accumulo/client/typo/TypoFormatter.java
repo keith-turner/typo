@@ -47,7 +47,7 @@ public class TypoFormatter implements Formatter {
     Typo<?,?,?,?>.Key typoKey = typo.newKey().setKey(next.getKey());
 
     return typoKey.getRow() + " " + typoKey.getColumnFamily() + " " + typoKey.getColumnQualifier() + "  [" + typoKey.getColumnVisibility() + "] "
-        + typo.getEncoders().getValueEncoder().fromBytes(next.getValue().get());
+        + typo.getEncoders().getValueEncoder().decode(next.getValue().get());
   }
   
   @Override

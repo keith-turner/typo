@@ -19,7 +19,6 @@ package org.apache.accumulo.client.typo.encoders;
 /**
  * 
  */
-public interface Encoder<T> {
-  public abstract byte[] toBytes(T data);
-  public abstract T fromBytes(byte[] data);
+public interface Encoder<T> extends org.apache.accumulo.core.iterators.TypedValueCombiner.Encoder<T> {
+
 }

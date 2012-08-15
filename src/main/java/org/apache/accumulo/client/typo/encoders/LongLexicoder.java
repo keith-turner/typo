@@ -23,12 +23,12 @@ package org.apache.accumulo.client.typo.encoders;
 
 public class LongLexicoder extends ULongLexicoder {
   @Override
-  public byte[] toBytes(Long l) {
-    return super.toBytes(l ^ 0x8000000000000000l);
+  public byte[] encode(Long l) {
+    return super.encode(l ^ 0x8000000000000000l);
   }
   
   @Override
-  public Long fromBytes(byte[] data) {
-    return super.fromBytes(data) ^ 0x8000000000000000l;
+  public Long decode(byte[] data) {
+    return super.decode(data) ^ 0x8000000000000000l;
   }
 }

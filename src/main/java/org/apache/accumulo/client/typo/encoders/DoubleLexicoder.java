@@ -24,19 +24,19 @@ public class DoubleLexicoder implements Lexicoder<Double> {
   private ULongLexicoder longEncoder = new ULongLexicoder();
   
   @Override
-  public byte[] toBytes(Double d) {
+  public byte[] encode(Double d) {
     long l = Double.doubleToRawLongBits(d);
     if (l < 0)
       l = ~l;
     else
       l = l ^ 0x8000000000000000l;
     
-    return longEncoder.toBytes(l);
+    return longEncoder.encode(l);
   }
   
   @Override
-  public Double fromBytes(byte[] data) {
-    long l = longEncoder.fromBytes(data);
+  public Double decode(byte[] data) {
+    long l = longEncoder.decode(data);
     if (l < 0)
       l = l ^ 0x8000000000000000l;
     else

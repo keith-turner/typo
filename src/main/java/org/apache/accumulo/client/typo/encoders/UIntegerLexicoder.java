@@ -22,7 +22,7 @@ package org.apache.accumulo.client.typo.encoders;
 public class UIntegerLexicoder implements Lexicoder<Integer> {
   
   @Override
-  public byte[] toBytes(Integer i) {
+  public byte[] encode(Integer i) {
     int shift = 56;
     int index;
     int prefix = i < 0 ? 0xff : 0x00;
@@ -49,7 +49,7 @@ public class UIntegerLexicoder implements Lexicoder<Integer> {
   }
   
   @Override
-  public Integer fromBytes(byte[] data) {
+  public Integer decode(byte[] data) {
     
     if (data[0] < 0 || data[0] > 8)
       throw new IllegalArgumentException("Unexpected length " + (0xff & data[0]));

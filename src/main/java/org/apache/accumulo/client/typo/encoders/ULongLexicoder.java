@@ -23,7 +23,7 @@ package org.apache.accumulo.client.typo.encoders;
 public class ULongLexicoder implements Lexicoder<Long> {
   
   @Override
-  public byte[] toBytes(Long l) {
+  public byte[] encode(Long l) {
     int shift = 56;
     int index;
     int prefix = l < 0 ? 0xff : 0x00;
@@ -50,7 +50,7 @@ public class ULongLexicoder implements Lexicoder<Long> {
   }
   
   @Override
-  public Long fromBytes(byte[] data) {
+  public Long decode(byte[] data) {
     
     long l = 0;
     int shift = 0;

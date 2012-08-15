@@ -25,12 +25,12 @@ import org.apache.hadoop.io.Text;
 public class TextLexicoder implements Lexicoder<Text> {
   
   @Override
-  public byte[] toBytes(Text data) {
+  public byte[] encode(Text data) {
     return TextUtil.getBytes(data);
   }
   
   @Override
-  public Text fromBytes(byte[] data) {
+  public Text decode(byte[] data) {
     return new Text(data);
   }
   

@@ -24,7 +24,7 @@ import java.io.UnsupportedEncodingException;
 public class StringLexicoder implements Lexicoder<String> {
   
   @Override
-  public byte[] toBytes(String data) {
+  public byte[] encode(String data) {
     try {
       return data.getBytes("UTF-8");
     } catch (UnsupportedEncodingException e) {
@@ -33,7 +33,7 @@ public class StringLexicoder implements Lexicoder<String> {
   }
   
   @Override
-  public String fromBytes(byte[] data) {
+  public String decode(byte[] data) {
     try {
       return new String(data, "UTF-8");
     } catch (UnsupportedEncodingException e) {

@@ -45,14 +45,14 @@ public class GraphExample {
   public static void main(String[] args) throws Exception {
     MockInstance mi = new MockInstance();
     Connector conn = mi.getConnector("root", "secret");
-    conn.tableOperations().create("foo");
+    conn.tableOperations().create("edges");
     
     insertData(conn);
     scanData(conn);
   }
   
   static void insertData(Connector conn) throws Exception {
-    BatchWriter bw = conn.createBatchWriter("foo", 1000000, 60000, 2);
+    BatchWriter bw = conn.createBatchWriter("edges", 1000000, 60000, 2);
     
     GraphTypo graphTypo = new GraphTypo();
     
@@ -77,13 +77,21 @@ public class GraphExample {
     edge4.put("counts", "dropped", 4l);
     bw.addMutation(edge4);
     
+    // if a bi-directional link exist between two nodes X and Y, then two edges should be inserted
+    // one for each direction.... earlier 95, 123 was inserted.. this is the only way that
+    // both directions of the link can be found efficiently
+    GraphTypo.Mutation edge5 = graphTypo.newMutation(new Pair<Long,Long>(123l, 95l));
+    edge5.put("counts", "clicked", 12l);
+    edge5.put("counts", "dropped", 50l);
+    bw.addMutation(edge5);
+
     bw.close();
   }
   
   static void scanData(Connector conn) throws Exception {
     GraphTypo graphTypo = new GraphTypo();
 
-    Scanner scanner = conn.createScanner("foo", Constants.NO_AUTHS);
+    Scanner scanner = conn.createScanner("edges", Constants.NO_AUTHS);
     
     // scan over all edge that connect to node 95
     scanner.setRange(graphTypo.newRange(new Pair<Long,Long>(95l, 0l), new Pair<Long,Long>(95l, Long.MAX_VALUE)));

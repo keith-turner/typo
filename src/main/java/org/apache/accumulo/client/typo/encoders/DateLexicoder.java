@@ -26,13 +26,13 @@ public class DateLexicoder implements Lexicoder<Date> {
   private ULongLexicoder longEncoder = new ULongLexicoder();
   
   @Override
-  public byte[] toBytes(Date data) {
-    return longEncoder.toBytes(data.getTime());
+  public byte[] encode(Date data) {
+    return longEncoder.encode(data.getTime());
   }
   
   @Override
-  public Date fromBytes(byte[] data) {
-    return new Date(longEncoder.fromBytes(data));
+  public Date decode(byte[] data) {
+    return new Date(longEncoder.decode(data));
   }
   
 }

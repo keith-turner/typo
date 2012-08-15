@@ -24,13 +24,13 @@ public class IntegerLexicoder implements Lexicoder<Integer> {
   private UIntegerLexicoder uil = new UIntegerLexicoder();
   
   @Override
-  public byte[] toBytes(Integer i) {
-    return uil.toBytes(i ^ 0x80000000);
+  public byte[] encode(Integer i) {
+    return uil.encode(i ^ 0x80000000);
   }
   
   @Override
-  public Integer fromBytes(byte[] data) {
-    return uil.fromBytes(data) ^ 0x80000000;
+  public Integer decode(byte[] data) {
+    return uil.decode(data) ^ 0x80000000;
   }
   
 }

@@ -33,21 +33,21 @@ public class TripleLexicoder<A,B,C> implements Lexicoder<Triple<A,B,C>> {
   }
 
   @Override
-  public byte[] toBytes(Triple<A,B,C> data) {
-    return PairLexicoder.concat(PairLexicoder.escape(firstLexicoder.toBytes(data.getFirst())), PairLexicoder.escape(secondLexicoder.toBytes(data.getSecond())),
-        PairLexicoder.escape(thirdLexicoder.toBytes(data.getThird())));
+  public byte[] encode(Triple<A,B,C> data) {
+    return PairLexicoder.concat(PairLexicoder.escape(firstLexicoder.encode(data.getFirst())), PairLexicoder.escape(secondLexicoder.encode(data.getSecond())),
+        PairLexicoder.escape(thirdLexicoder.encode(data.getThird())));
   }
   
   @Override
-  public Triple<A,B,C> fromBytes(byte[] data) {
+  public Triple<A,B,C> decode(byte[] data) {
     byte[][] fields = PairLexicoder.split(data);
     
     if (fields.length != 3) {
       throw new RuntimeException("Data does not have 3 fields, it has " + fields.length);
     }
     
-    return new Triple<A,B,C>(firstLexicoder.fromBytes(PairLexicoder.unescape(fields[0])), secondLexicoder.fromBytes(PairLexicoder.unescape(fields[1])),
-        thirdLexicoder.fromBytes(PairLexicoder.unescape(fields[2])));
+    return new Triple<A,B,C>(firstLexicoder.decode(PairLexicoder.unescape(fields[0])), secondLexicoder.decode(PairLexicoder.unescape(fields[1])),
+        thirdLexicoder.decode(PairLexicoder.unescape(fields[2])));
   }
   
 }

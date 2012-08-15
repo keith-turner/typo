@@ -22,12 +22,12 @@ package org.apache.accumulo.client.typo.encoders;
 public class BytesLexicoder implements Lexicoder<byte[]> {
   
   @Override
-  public byte[] toBytes(byte[] data) {
+  public byte[] encode(byte[] data) {
     return data;
   }
   
   @Override
-  public byte[] fromBytes(byte[] data) {
+  public byte[] decode(byte[] data) {
     return data;
   }
   

@@ -60,7 +60,7 @@ public class TypoConstraint implements Constraint {
     List<Short> ret = null;
     
     try {
-      encoders.getRowLexicoder().fromBytes(mutation.getRow());
+      encoders.getRowLexicoder().decode(mutation.getRow());
     } catch (Exception e) {
       ret = new ArrayList<Short>();
       ret.add((short) 1);
@@ -68,7 +68,7 @@ public class TypoConstraint implements Constraint {
     
     for (ColumnUpdate cu : mutation.getUpdates()) {
       try {
-        encoders.getColumnFamilyLexicoder().fromBytes(cu.getColumnFamily());
+        encoders.getColumnFamilyLexicoder().decode(cu.getColumnFamily());
       } catch (Exception e) {
         if (ret == null)
           ret = new ArrayList<Short>();
@@ -76,7 +76,7 @@ public class TypoConstraint implements Constraint {
       }
       
       try {
-        encoders.getColumnQualifierLexicoder().fromBytes(cu.getColumnQualifier());
+        encoders.getColumnQualifierLexicoder().decode(cu.getColumnQualifier());
       } catch (Exception e) {
         if (ret == null)
           ret = new ArrayList<Short>();
@@ -84,7 +84,7 @@ public class TypoConstraint implements Constraint {
       }
       
       try {
-        encoders.getValueEncoder().fromBytes(cu.getValue());
+        encoders.getValueEncoder().decode(cu.getValue());
       } catch (Exception e) {
         if (ret == null)
           ret = new ArrayList<Short>();

@@ -52,11 +52,11 @@ public abstract class Typo<RT,CFT,CQT,VT> {
     }
     
     public void fetchColumnFamily(CFT cf) {
-      scanner.fetchColumnFamily(new Text(ae.colfLexEnc.toBytes(cf)));
+      scanner.fetchColumnFamily(new Text(ae.colfLexEnc.encode(cf)));
     }
     
     public void fetchColumn(CFT cf, CQT cq) {
-      scanner.fetchColumn(new Text(ae.colfLexEnc.toBytes(cf)), new Text(ae.colqLexEnc.toBytes(cq)));
+      scanner.fetchColumn(new Text(ae.colfLexEnc.encode(cf)), new Text(ae.colqLexEnc.encode(cq)));
     }
     
     public ScannerBase getScanner() {
@@ -81,9 +81,9 @@ public abstract class Typo<RT,CFT,CQT,VT> {
     public Key() {}
     
     public Key setKey(org.apache.accumulo.core.data.Key key) {
-      row = ae.rowLexEnc.fromBytes(key.getRowData().toArray());
-      cf = ae.colfLexEnc.fromBytes(key.getColumnFamilyData().toArray());
-      cq = ae.colqLexEnc.fromBytes(key.getColumnQualifierData().toArray());
+      row = ae.rowLexEnc.decode(key.getRowData().toArray());
+      cf = ae.colfLexEnc.decode(key.getColumnFamilyData().toArray());
+      cq = ae.colqLexEnc.decode(key.getColumnQualifierData().toArray());
       cv = key.getColumnVisibility();
       ts = key.getTimestamp();
       isDelete = key.isDeleted();
@@ -91,8 +91,8 @@ public abstract class Typo<RT,CFT,CQT,VT> {
     }
     
     public org.apache.accumulo.core.data.Key getKey() {
-      org.apache.accumulo.core.data.Key key = new org.apache.accumulo.core.data.Key(ae.rowLexEnc.toBytes(getRow()), ae.colfLexEnc.toBytes(cf),
-          ae.colqLexEnc.toBytes(cq),
+      org.apache.accumulo.core.data.Key key = new org.apache.accumulo.core.data.Key(ae.rowLexEnc.encode(getRow()), ae.colfLexEnc.encode(cf),
+          ae.colqLexEnc.encode(cq),
           TextUtil.getBytes(cv), ts);
       key.setDeleted(isDelete);
       return key;
@@ -185,7 +185,7 @@ public abstract class Typo<RT,CFT,CQT,VT> {
       
       @Override
       public VT setValue(VT value) {
-        return ae.valEnc.fromBytes(srcEntry.setValue(new Value(ae.valEnc.toBytes(value))).get());
+        return ae.valEnc.decode(srcEntry.setValue(new Value(ae.valEnc.encode(value))).get());
       }
       
       public String toString() {
@@ -206,7 +206,7 @@ public abstract class Typo<RT,CFT,CQT,VT> {
     public Entry<Key,VT> next() {
       Entry<org.apache.accumulo.core.data.Key,Value> srcEntry = iter.next();
       Key tk = new Key().setKey(srcEntry.getKey());
-      VT val = ae.valEnc.fromBytes(srcEntry.getValue().get());
+      VT val = ae.valEnc.decode(srcEntry.getValue().get());
       
       return new TypoEntry(srcEntry, tk, val);
     }
@@ -221,39 +221,39 @@ public abstract class Typo<RT,CFT,CQT,VT> {
   public class Mutation extends org.apache.accumulo.core.data.Mutation {
     
     public Mutation(RT row) {
-      super(new Text(ae.rowLexEnc.toBytes(row)));
+      super(new Text(ae.rowLexEnc.encode(row)));
     }
     
     public void put(CFT cf, CQT cq, ColumnVisibility cv, long ts, VT val) {
-      super.put(new Text(ae.colfLexEnc.toBytes(cf)), new Text(ae.colqLexEnc.toBytes(cq)), cv, ts, new Value(ae.valEnc.toBytes(val)));
+      super.put(new Text(ae.colfLexEnc.encode(cf)), new Text(ae.colqLexEnc.encode(cq)), cv, ts, new Value(ae.valEnc.encode(val)));
     }
     
     public void put(CFT cf, CQT cq, ColumnVisibility cv, VT val) {
-      super.put(new Text(ae.colfLexEnc.toBytes(cf)), new Text(ae.colqLexEnc.toBytes(cq)), cv, new Value(ae.valEnc.toBytes(val)));
+      super.put(new Text(ae.colfLexEnc.encode(cf)), new Text(ae.colqLexEnc.encode(cq)), cv, new Value(ae.valEnc.encode(val)));
     }
     
     public void put(CFT cf, CQT cq, VT val) {
-      super.put(new Text(ae.colfLexEnc.toBytes(cf)), new Text(ae.colqLexEnc.toBytes(cq)), new Value(ae.valEnc.toBytes(val)));
+      super.put(new Text(ae.colfLexEnc.encode(cf)), new Text(ae.colqLexEnc.encode(cq)), new Value(ae.valEnc.encode(val)));
     }
     
     public void put(CFT cf, CQT cq, long ts, VT val) {
-      super.put(new Text(ae.colfLexEnc.toBytes(cf)), new Text(ae.colqLexEnc.toBytes(cq)), ts, new Value(ae.valEnc.toBytes(val)));
+      super.put(new Text(ae.colfLexEnc.encode(cf)), new Text(ae.colqLexEnc.encode(cq)), ts, new Value(ae.valEnc.encode(val)));
     }
     
     public void putDelete(CFT cf, CQT cq, ColumnVisibility cv, long ts) {
-      super.putDelete(new Text(ae.colfLexEnc.toBytes(cf)), new Text(ae.colqLexEnc.toBytes(cq)), cv, ts);
+      super.putDelete(new Text(ae.colfLexEnc.encode(cf)), new Text(ae.colqLexEnc.encode(cq)), cv, ts);
     }
     
     public void putDelete(CFT cf, CQT cq, ColumnVisibility cv) {
-      super.putDelete(new Text(ae.colfLexEnc.toBytes(cf)), new Text(ae.colqLexEnc.toBytes(cq)), cv);
+      super.putDelete(new Text(ae.colfLexEnc.encode(cf)), new Text(ae.colqLexEnc.encode(cq)), cv);
     }
     
     public void putDelete(CFT cf, CQT cq) {
-      super.putDelete(new Text(ae.colfLexEnc.toBytes(cf)), new Text(ae.colqLexEnc.toBytes(cq)));
+      super.putDelete(new Text(ae.colfLexEnc.encode(cf)), new Text(ae.colqLexEnc.encode(cq)));
     }
     
     public void putDelete(CFT cf, CQT cq, long ts) {
-      super.putDelete(new Text(ae.colfLexEnc.toBytes(cf)), new Text(ae.colqLexEnc.toBytes(cq)), ts);
+      super.putDelete(new Text(ae.colfLexEnc.encode(cf)), new Text(ae.colqLexEnc.encode(cq)), ts);
     }
   }
 
@@ -286,15 +286,15 @@ public abstract class Typo<RT,CFT,CQT,VT> {
   }
 
   public Range newRange(RT row) {
-    return new Range(new Text(ae.rowLexEnc.toBytes(row)));
+    return new Range(new Text(ae.rowLexEnc.encode(row)));
   }
 
   public Range newRange(RT start, RT end) {
-    return new Range(start == null ? null : new Text(ae.rowLexEnc.toBytes(start)), end == null ? null : new Text(ae.rowLexEnc.toBytes(end)));
+    return new Range(start == null ? null : new Text(ae.rowLexEnc.encode(start)), end == null ? null : new Text(ae.rowLexEnc.encode(end)));
   }
   
   public Range newRange(RT start, boolean startInc, RT end, boolean endInc) {
-    return new Range(start == null ? null : new Text(ae.rowLexEnc.toBytes(start)), startInc, end == null ? null : new Text(ae.rowLexEnc.toBytes(end)), endInc);
+    return new Range(start == null ? null : new Text(ae.rowLexEnc.encode(start)), startInc, end == null ? null : new Text(ae.rowLexEnc.encode(end)), endInc);
   }
   
   public Key newKey() {

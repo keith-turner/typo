@@ -34,20 +34,20 @@ public class PairLexicoder<A,B> implements Lexicoder<Pair<A,B>> {
   }
 
   @Override
-  public byte[] toBytes(Pair<A,B> data) {
-    return concat(escape(firstLexicoder.toBytes(data.getFirst())), escape(secondLexicoder.toBytes(data.getSecond())));
+  public byte[] encode(Pair<A,B> data) {
+    return concat(escape(firstLexicoder.encode(data.getFirst())), escape(secondLexicoder.encode(data.getSecond())));
   }
 
 
   @Override
-  public Pair<A,B> fromBytes(byte[] data) {
+  public Pair<A,B> decode(byte[] data) {
     
     byte[][] fields = split(data);
     if (fields.length != 2) {
       throw new RuntimeException("Data does not have 2 fields, it has " + fields.length);
     }
     
-    return new Pair<A,B>(firstLexicoder.fromBytes(unescape(fields[0])), secondLexicoder.fromBytes(unescape(fields[1])));
+    return new Pair<A,B>(firstLexicoder.decode(unescape(fields[0])), secondLexicoder.decode(unescape(fields[1])));
   }
   
   public static byte[][] split(byte[] data) {

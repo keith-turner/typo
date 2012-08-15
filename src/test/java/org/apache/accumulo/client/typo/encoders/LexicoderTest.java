@@ -41,7 +41,7 @@ public class LexicoderTest extends TestCase {
     
     for (T d : data) {
       list.add(d);
-      encList.add(new Text(lexicoder.toBytes(d)));
+      encList.add(new Text(lexicoder.encode(d)));
     }
     
     if (comp != null)
@@ -54,7 +54,7 @@ public class LexicoderTest extends TestCase {
     List<T> decodedList = new ArrayList<T>();
     
     for (Text t : encList) {
-      decodedList.add(lexicoder.fromBytes(TextUtil.getBytes(t)));
+      decodedList.add(lexicoder.decode(TextUtil.getBytes(t)));
     }
     
     assertEquals(list, decodedList);

@@ -29,8 +29,8 @@ public class ReverseLexicoder<T> implements Lexicoder<T> {
   }
   
   @Override
-  public byte[] toBytes(T data) {
-    byte[] bytes = PairLexicoder.escape(lexicoder.toBytes(data));
+  public byte[] encode(T data) {
+    byte[] bytes = PairLexicoder.escape(lexicoder.encode(data));
     byte[] ret = new byte[bytes.length + 1];
     
     for (int i = 0; i < bytes.length; i++)
@@ -42,12 +42,12 @@ public class ReverseLexicoder<T> implements Lexicoder<T> {
   }
   
   @Override
-  public T fromBytes(byte[] data) {
+  public T decode(byte[] data) {
     byte ret[] = new byte[data.length - 1];
     
     for (int i = 0; i < ret.length; i++)
       ret[i] = (byte) (0xff - (0xff & data[i]));
       
-     return lexicoder.fromBytes(PairLexicoder.unescape(ret));
+     return lexicoder.decode(PairLexicoder.unescape(ret));
   }
 }
