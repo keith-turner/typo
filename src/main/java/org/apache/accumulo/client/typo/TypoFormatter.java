@@ -30,6 +30,7 @@ public class TypoFormatter implements Formatter {
   
   private Iterator<Entry<Key,Value>> iter;
   private Typo<?,?,?,?> typo;
+  private boolean printTimestamps;
   
   public TypoFormatter(Typo<?,?,?,?> typo) {
     this.typo = typo;
@@ -47,6 +48,7 @@ public class TypoFormatter implements Formatter {
     Typo<?,?,?,?>.Key typoKey = typo.decode(next.getKey());
 
     return typoKey.getRow() + " " + typoKey.getColumnFamily() + " " + typoKey.getColumnQualifier() + "  [" + typoKey.getColumnVisibility() + "] "
+        + (printTimestamps ? +typoKey.getTimestamp() + " " : "")
         + typo.getEncoders().getValueEncoder().decode(next.getValue().get());
   }
   
@@ -58,6 +60,7 @@ public class TypoFormatter implements Formatter {
   @Override
   public void initialize(Iterable<Entry<Key,Value>> scanner, boolean printTimestamps) {
     this.iter = scanner.iterator();
+    this.printTimestamps = printTimestamps;
   }
   
 }
