@@ -29,7 +29,7 @@ import org.apache.hadoop.io.Text;
 /**
  * 
  */
-public class LexicoderTest extends TestCase {
+public abstract class LexicoderTest extends TestCase {
   
   void assertEqualsB(byte[] ba1, byte[] ba2) {
     assertEquals(new Text(ba2), new Text(ba1));
@@ -64,5 +64,4 @@ public class LexicoderTest extends TestCase {
     assertSortOrder(lexicoder, null, data);
   }
   
-  public void test1() {}
 }
