@@ -44,7 +44,7 @@ public class TypoFormatter implements Formatter {
   public String next() {
     Entry<Key,Value> next = iter.next();
     
-    Typo<?,?,?,?>.Key typoKey = typo.newKey().setKey(next.getKey());
+    Typo<?,?,?,?>.Key typoKey = typo.decode(next.getKey());
 
     return typoKey.getRow() + " " + typoKey.getColumnFamily() + " " + typoKey.getColumnQualifier() + "  [" + typoKey.getColumnVisibility() + "] "
         + typo.getEncoders().getValueEncoder().decode(next.getValue().get());

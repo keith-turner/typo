@@ -301,6 +301,14 @@ public abstract class Typo<RT,CFT,CQT,VT> {
     return new Key();
   }
   
+  public Key decode(org.apache.accumulo.core.data.Key k) {
+    return new Key().setKey(k);
+  }
+  
+  public VT decode(Value val) {
+    return ae.valEnc.decode(val.get());
+  }
+
   public TypoEncoders<RT,CFT,CQT,VT> getEncoders() {
     return ae;
   }
