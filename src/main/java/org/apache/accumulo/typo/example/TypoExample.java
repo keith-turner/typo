@@ -1,17 +1,35 @@
-Typo
-=====
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.accumulo.typo.example;
 
-Typo is a simple serialization layer for Accumulo that makes it easy to read
-and write java objects directly to Accumulo fields.  Typo serializes Java types
-in such a way that the lexicographic sort order corresponds to the object sort
-order.  Typo is not an ORM layer, its purpose is to make it easy to read and
-write Java objects to the Accumulo key fields and value that sort correctly.
+import java.util.Map.Entry;
 
-This project is an experiment and its API may change drastically.
+import org.apache.accumulo.core.Constants;
+import org.apache.accumulo.core.client.BatchWriter;
+import org.apache.accumulo.core.client.Connector;
+import org.apache.accumulo.core.client.Scanner;
+import org.apache.accumulo.core.client.mock.MockInstance;
+import org.apache.accumulo.typo.Typo;
+import org.apache.accumulo.typo.TypoFormatter;
+import org.apache.accumulo.typo.constraints.TypoConstraint;
+import org.apache.accumulo.typo.encoders.DoubleLexicoder;
+import org.apache.accumulo.typo.encoders.LongLexicoder;
+import org.apache.accumulo.typo.encoders.StringLexicoder;
 
-Below is a simple example of reading and writing data to Accumulo using Typo.
-
-```java
 // An easy way to use Typo is to create a class that extends it and use the 
 // subtype everywhere in your code.  This is what was done below. Nomrally the
 // class below would be public and in its own file.  To keep the example self 
@@ -102,19 +120,3 @@ public class TypoExample {
     System.out.println("cqSum  : " + cqSum);
   }
 }
-```
-
-The example outputs the following.
-
-<pre>
--2 sq 4.0 [] 1344641128233 val
--1 sq 1.0 [] 1344641128234 val
-0 sq 0.0 [] 1344641128234 val
-1 sq 1.0 [] 1344641128234 val
-2 sq 4.0 [] 1344641128234 val
-3 sq 9.0 [] 1344641128234 val
-rowSum : 3
-cqSum  : 19.0
-</pre>
-
-The souce code contains [additional examples](https://github.com/keith-turner/typo/tree/master/src/main/java/org/apache/accumulo/typo/example).
