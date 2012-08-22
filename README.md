@@ -7,8 +7,6 @@ in such a way that the lexicographic sort order corresponds to the object sort
 order.  Typo is not an ORM layer, its purpose is to make it easy to read and
 write Java objects to the Accumulo key fields and value that sort correctly.
 
-This project is an experiment and its API may change drastically.
-
 Below is a simple example of reading and writing data to Accumulo using Typo.
 
 ```java
